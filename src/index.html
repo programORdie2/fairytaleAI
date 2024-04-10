@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>AI Fairytale Generator</title>
+        <meta name="description" content="AI Fairytale Generator">
+        <link rel="icon" href="https://pod.stio.studio/static/img/faveicon.png" />
+
+        <style>*,.story,section{position:relative}#popup,*{transition:.3s}#logs>div,#popup>div>div{border-bottom:1px solid #adadad}#generate,#start{padding:.7em .9em;width:7em;font-weight:600;float:right;position:absolute;bottom:1.5em;right:1.5em;top:initial;cursor:pointer;color:#fff}*{box-sizing:border-box;z-index:2}::-webkit-scrollbar{width:7px;height:5px;background-color:#4181b7}.upload,body,html{width:100%;display:flex}::-webkit-scrollbar-thumb{background:#a5a5a5;border-radius:5px}::-webkit-scrollbar-thumb:hover{background:#787878}body,html{margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;height:auto;background:url('https://programordie.neocities.org/bg.png') center center/100% 100% no-repeat fixed;color:#fff;flex-direction:column;justify-content:center;align-items:center}.sectionWrapper{height:calc(100vh - 2em);display:flex;flex-direction:column;justify-content:center;align-items:center}section{background-color:#11111180;min-width:600px;min-height:370px;padding:2em;margin:3em;border-radius:1em;backdrop-filter:blur(10px);box-shadow:0 4px 12px rgba(0,0,0,.1)}section>button{position:absolute;top:.75em;right:.75em;background-color:#cecece44;border:none;color:#fff;border-radius:12px;padding:.5em;cursor:pointer;width:2.6em;height:2.6em}section button img{width:1.6em;height:1.6em}section button:hover{background-color:#cecece5b;cursor:pointer}section button:active{background-color:#cecece70;scale:0.96}section h2{font-size:1.5em;margin:0}.upload,section>p{margin-left:1.4em}section>p{margin-bottom:1.8em}.upload *{pointer-events:none}.upload{max-width:300px;max-height:140px;height:100%;border-radius:10px;background-color:#ffffff10;border:3px dashed #ffffff20;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;margin-top:.7em}.hide,.upload input{display:none}.upload p{text-align:center;font-weight:600}.upload.dragover{background-color:#00a2ff;border:3px dashed #fff}.upload img{width:90px;border-radius:3px;margin-right:.8em}.upload:has(img){flex-direction:row;padding:1em;width:fit-content;height:fit-content;border:none;background-color:transparent;cursor:default;pointer-events:initial}#generate{margin-top:1em;border:none;border-radius:5px;background-color:#00a2ff;margin-left:auto;overflow:hidden;box-shadow:0 2px 2px rgba(0,0,0,.05)}#generate:hover{background-color:#00a2ffd2}#generate:active{scale:0.95}#generate:disabled{background-color:#7c7c7c89!important;cursor:not-allowed}.hide{transform:scaleX(0);width:0!important;opacity:0;height:0!important}#logs{height:8em;overflow:auto;border-radius:2.5px;padding-top:.3em;padding-bottom:.1em;margin-top:5em;color:#dadada}#logs p{margin:0;font-size:1rem;color:#fff}#logs div{font-size:.85em;color:#c3c3c3;margin-left:1.6em}#logs::-webkit-scrollbar{border-radius:5px;background-color:transparent}.author,.model{margin-left:0!important;font-size:1rem!important;color:#dadada!important;text-decoration:underline dotted}#logs>div{padding-bottom:.5em;margin-bottom:.5em}#status{height:5em;background-color:#515151c3;border-radius:1em;display:flex;align-items:center;justify-content:center;flex-direction:column;margin-top:1em}.progressOuter{width:200px;height:1em;background-color:#929292;border-radius:1em;overflow:hidden}#error,#popup,.progressInner{height:100%;display:flex}#start,.progressInner{background-color:#00a2ff}.progressInner{width:75%;border-radius:1em;align-items:center;justify-content:center}#error,#popup,.second{width:100%}#status p{margin-top:0}.story{display:flex;flex-direction:row;align-items:center;margin-top:2em}.story img{height:200px;border-radius:3px;margin:1.8em}.reverse{flex-direction:row-reverse!important}@media (max-width:700px){.reverse,.story{flex-direction:column!important}section{min-width:initial!important;min-height:400px}#logs{margin-top:8em}}@media (max-width:400px){.upload{margin-left:auto;margin-right:auto}section{min-height:480px}h2{text-align:center}#logs{margin-top:8em}}footer{height:2em}footer a{color:#fff;text-decoration:underline}footer p{margin:0;font-size:.9em}.displayNone{display:none!important}.byePopup{padding-top:60em!important;opacity:0!important;z-index:1!important;transition:5s ease-in-out}.byePopup>div{scale:0.2!important}#popup{position:fixed;top:0;left:0;background-color:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:100;opacity:1;padding-top:0}#error>div,#popup>div{background-color:#2b2b2b;padding:1em;border-radius:5px;color:#fff;font-size:1.2em;margin:2em;max-height:calc(100vh - 4em);overflow-y:auto;scale:1;box-shadow:0 0 10px rgba(0,0,0,.5)}#popup>div::-webkit-scrollbar{border-radius:5px;background-color:transparent}#error h1,#popup>div h2{text-align:center;margin-top:.2em}#popup>div>div span{margin-left:.4em;color:#d6d6d6}#popup>div>div .result{color:#009eca;margin-left:.7em}#popup>div>div .model{margin-top:14px!important;margin-bottom:5px!important;margin-left:.3em!important;color:#d6d6d6!important;font-size:12px!important;text-decoration:none!important}#images{display:flex}#images img{width:calc(50% - 3em);border-radius:3px;margin:1.4em}#popup .closeButton{position:absolute;top:.5em;right:.75em;border:none;color:rgba(255,255,255,.498);border-radius:6px;font-weight:900;cursor:pointer;margin:0}#popup .closeButton:hover{color:rgba(255,255,255,.71);cursor:pointer}.second *{margin-left:1.4em}.second h3{margin-top:.3em;margin-left:0}.second option,.second select{background-color:#2b2b2b80;color:#fff;border:none;border-radius:5px;padding:.5em;margin-bottom:.5em;width:200px;cursor:pointer;font-size:.9em}.second option:focus,.second select:focus{outline:0}.second option{background-color:#4f4f4f}#start{margin-top:.5em;border:none;border-radius:5px}#start:hover{background-color:#008ada;cursor:pointer}#start:active{scale:0.96}#error{z-index:150;position:fixed;background-color:#ff000097;color:#fff;align-items:center;justify-content:center}.hideEffect{position:fixed;opacity:0;transition:.4s;animation:.4s hide}.showEffect{opacity:1;margin-left:30em;transition:.4s 0.1s}@keyframes hide{0%{left:0}100%{left:-30em}}</style>
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+            <section>
+                <button title="How this works" id="info"><img src="https://programordie.neocities.org/info.png"
+                        alt="info"></button>
+                <h2>AI Fairytale Generator</h2>
+                <p class="leave">Create beautiful stories with illustrations in just a few seconds</p>
+                <span class="leave"><strong>Select an image to base your story on:</strong></span>
+                <div class="upload leave">
+                    <input type="file" id="file" accept="image/png, image/jpeg, image/jpg">
+                    <p>Click or drag and drop an image</p>
+                </div>
+                <button id="generate" disabled class="leave" title="Next">Next</button>
+
+                <div class="second hide">
+                    <h3>Language</h3>
+                    <p>Please select the language you want to translate your story to:</p>
+                    <select id="language"></select>
+                </div>
+
+                <button id="start" title="Generate" class="second hide">Generate</button>
+
+                <div class="onProccess hide">
+                    <div id="status">
+                        <p>Generating images...</p>
+                        <div class="progressOuter">
+                            <div class="progressInner">75%</div>
+                        </div>
+                    </div>
+                    <div id="logs"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="popup" class="byePopup">
+            <div class="popupContent">
+                <p class="closeButton">x</p>
+                <h2>How this works</h2>
+                <div>
+                    <p>When you select an image, the first AI will try to give us a description of the image.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="description">[In progress...]</span>
+
+                    <p class="model">Uses unum/uform-gen2-qwen-500m</p>
+                </div>
+                <div>
+                    <p>Then, a second AI will make sure the images doens't contain any NSFE content.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="unsafe">[In progress...]</span>
+
+                    <p class="model">Uses nousresearch/hermes-2-pro-mistral-7b</p>
+                </div>
+                <div>
+                    <p>When the second AI is done, it will generate a story, based on the description.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="story">[In progress...]</span>
+
+                    <p class="model">Uses meta/llama-2-7b-chat-int8</p>
+                </div>
+                <div>
+                    <p>The story will be translated to your preffered language.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="translation">[In progress...]</span>
+
+                    <p class="model">Uses meta/m2m100-1.2b</p>
+                </div>
+                <div>
+                    <p>To generate beautiful images, you also need good prompts, so we ask the AI to generate them.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="prompts">[In progress...]</span>
+
+                    <p class="model">Uses google/gemma-7b-it</p>
+                </div>
+                <div>
+                    <p>Finally, we will generate the images.</p>
+                    <span>Result:</span><br>
+                    <span class="result" id="images">[In progress...]</span>
+
+                    <p class="model">Uses lykon/dreamshaper-8-lcm</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="error" class="hide">
+            <div>
+                <h1>Woops!</h1>
+                <p>Something went wrong while trying to fetch responses from the AI.</p>
+                <p>This could be due to I used all my neurons of today.</p>
+                <p>If you want to try again, reload the page, or run it locally (see README.md)</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; <a href="https://pod.stio.studio" target="_blank" title="programORdie">programORdie</a></p>
+        </footer>
+
+        <script>
+            let status = { 'name': '', 'started': Date.now(), 'avrgTime': 1, 'model': '', 'author': '' };
+
+            const logs = document.getElementById('logs');
+
+            function setStatus(name, avrgTime, model = '', author = '') {
+                const log = document.createElement('div');
+                log.innerHTML = '<p>' + status['name'] + ' - ' + (Date.now() - status['started']) + 'ms' + '</p><div>Using <span class="model">' + status['model'] + '</span> by <span class="author">' + status['author'] + '</div>';
+                if (status['name'] !== '') {
+                    logs.lastChild.remove();
+                    logs.appendChild(log);
+                }
+
+                status = { 'name': name, 'started': Date.now(), 'avrgTime': avrgTime * 1000, 'model': model, 'author': author };
+                updateStatus();
+                logs.innerHTML += '<div><p>' + status['name'] + ' - In progress ...</p><div>Using <span class="model">' + status['model'] + '</span> by <span class="author">' + status['author'] + '</div></div>';
+
+                logs.scrollTop = logs.scrollHeight;
+            }
+
+            function updateStatus() {
+                document.getElementById('status').querySelector('p').innerHTML = status['name'];
+                document.getElementById('status').querySelector('.progressInner').style.width = Math.min(99, (Date.now() - status['started']) / status['avrgTime'] * 100) + '%';
+                document.getElementById('status').querySelector('.progressInner').innerHTML = Math.min(99, Math.floor((Date.now() - status['started']) / status['avrgTime'] * 100)) + '%';
+
+                if (status['avrgTime'] === 0) {
+                    document.getElementById('status').querySelector('.progressInner').style.width = '100%';
+                    document.getElementById('status').querySelector('.progressInner').innerHTML = '100%';
+                }
+            }
+            setInterval(updateStatus, 1000);
+        </script>
+        <script>
+            let file = 'idk';
+            let imgsDone = 0;
+
+            let storyComplete = [];
+            let imagesComplete = ['', ''];
+
+            let toLang = 'en';
+
+            const langs = {
+                "Afrikaans": "af",
+                "Amharic": "am",
+                "Arabic": "ar",
+                "Asturian": "ast",
+                "Azerbaijani": "az",
+                "Bashkir": "ba",
+                "Belarusian": "be",
+                "Bulgarian": "bg",
+                "Bengali": "bn",
+                "Breton": "br",
+                "Bosnian": "bs",
+                "Catalan": "ca",
+                "Cebuano": "ceb",
+                "Czech": "cs",
+                "Welsh": "cy",
+                "Danish": "da",
+                "German": "de",
+                "Greek": "el",
+                "English": "en",
+                "Spanish": "es",
+                "Estonian": "et",
+                "Persian": "fa",
+                "Fulah": "ff",
+                "Finnish": "fi",
+                "French": "fr",
+                "Western Frisian": "fy",
+                "Irish": "ga",
+                "Gaelic": "gd",
+                "Galician": "gl",
+                "Gujarati": "gu",
+                "Hausa": "ha",
+                "Hebrew": "he",
+                "Hindi": "hi",
+                "Croatian": "hr",
+                "Haitian": "ht",
+                "Hungarian": "hu",
+                "Armenian": "hy",
+                "Indonesian": "id",
+                "Igbo": "ig",
+                "Iloko": "ilo",
+                "Icelandic": "is",
+                "Italian": "it",
+                "Japanese": "ja",
+                "Javanese": "jv",
+                "Georgian": "ka",
+                "Kazakh": "kk",
+                "Central Khmer": "km",
+                "Kannada": "kn",
+                "Korean": "ko",
+                "Luxembourgish": "lb",
+                "Ganda": "lg",
+                "Lingala": "ln",
+                "Lao": "lo",
+                "Lithuanian": "lt",
+                "Latvian": "lv",
+                "Malagasy": "mg",
+                "Macedonian": "mk",
+                "Malayalam": "ml",
+                "Mongolian": "mn",
+                "Marathi": "mr",
+                "Malay": "ms",
+                "Burmese": "my",
+                "Nepali": "ne",
+                "Dutch": "nl",
+                "Norwegian": "no",
+                "Northern Sotho": "ns",
+                "Occitan": "oc",
+                "Oriya": "or",
+                "Panjabi": "pa",
+                "Polish": "pl",
+                "Pushto": "ps",
+                "Portuguese": "pt",
+                "Romanian": "ro",
+                "Russian": "ru",
+                "Sindhi": "sd",
+                "Sinhala": "si",
+                "Slovak": "sk",
+                "Slovenian": "sl",
+                "Somali": "so",
+                "Albanian": "sq",
+                "Serbian": "sr",
+                "Swati": "ss",
+                "Sundanese": "su",
+                "Swedish": "sv",
+                "Swahili": "sw",
+                "Tamil": "ta",
+                "Thai": "th",
+                "Tagalog": "tl",
+                "Tswana": "tn",
+                "Turkish": "tr",
+                "Ukrainian": "uk",
+                "Urdu": "ur",
+                "Uzbek": "uz",
+                "Vietnamese": "vi",
+                "Wolof": "wo",
+                "Xhosa": "xh",
+                "Yiddish": "yi",
+                "Yoruba": "yo",
+                "Chinese": "zh",
+                "Zulu": "zu",
+            }
+
+            function hide(element) {
+                element.classList.add('hideEffect');
+                setTimeout(() => {
+                    element.classList.remove('hideEffect');
+                    element.classList.add('hide');
+                }, 400);
+            }
+
+            function show(element) {
+                element.classList.remove('hide');
+                element.classList.add('showEffect');
+                setTimeout(() => {
+                    element.classList.remove('showEffect');
+                }, 0);
+            }
+
+            function prepareLanguageDropdown() {
+                const dropdown = document.getElementById('language');
+                for (const [key, value] of Object.entries(langs)) {
+                    const option = document.createElement('option');
+                    option.value = value;
+                    option.text = key;
+                    dropdown.appendChild(option);
+                }
+
+                dropdown.value = "en";
+            }
+
+            prepareLanguageDropdown();
+
+            function splitSection(text) {
+                let sections = text.split('.');
+                const length = Math.round(sections.length / 3);
+                sections = [sections.slice(0, length).join('.'), sections.slice(length, length * 2).join('.'), sections.slice(length * 2).join('.')];
+
+                console.log(sections);
+
+                return sections;
+            }
+
+            async function request(url, retries = 2, headers = {}) {
+                let response = await fetch(url, { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(headers), method: 'POST' });
+                if (response.status >= 400) {
+                    if (retries > 0) {
+                        console.log('Retrying...');
+                        retries -= 1;
+                        response = await request(url, retries);
+                    } else {
+                        console.warn('Failed To Fetch');
+
+                        show(document.getElementById('error'));
+                    }
+                }
+                return response;
+            }
+
+            async function translate(text, to) {
+                if (to in Object.keys(langs)) {
+                    to = langs[to];
+                }
+
+                if (to === 'en') {
+                    return text;
+                }
+
+                text = text.replaceAll('.', ' + ');
+
+                const responseRaw = await request('/translate?to=' + to + '&text=' + text);
+                const response = await responseRaw.json();
+
+                console.log(response);
+                console.log(text);
+
+                return response.translated_text.replaceAll(' + ', '. ').replaceAll('+', '.');
+            }
+
+            function renderStory() {
+                document.querySelector('.sectionWrapper').style.height = '100%';
+                document.querySelector('h2').innerHTML = 'AI Fairytale';
+                document.querySelector('h2').style.textAlign = 'center';
+                document.querySelector('h2').style.fontSize = '2em';
+
+                document.getElementById('images').innerHTML = '';
+
+                let storyHtml = document.createElement('div');
+                let reverse = false;
+                for (let i = 0; i < storyComplete.length; i++) {
+                    let story = storyComplete[i];
+
+                    const currentHtml = document.createElement('div');
+                    currentHtml.className = 'story';
+                    if (reverse) {
+                        currentHtml.classList.add('reverse');
+                    }
+                    currentHtml.innerHTML = '<p>' + story + '</p>';
+                    currentHtml.appendChild(imagesComplete[i]);
+
+                    const extraImage = document.createElement('img');
+                    extraImage.src = imagesComplete[i].src;
+                    document.getElementById('images').appendChild(extraImage);
+
+                    storyHtml.appendChild(currentHtml);
+                    reverse = !reverse;
+                };
+
+                document.querySelector('section').appendChild(storyHtml);
+            }
+
+            function parseStory(story) {
+                let sections = story.replaceAll('\\n\\n', '\\n');
+                sections = sections.replaceAll('---', '');
+                sections = sections.replaceAll('--', '');
+                sections = sections.replaceAll('\"\"', '\"');
+
+                sections = sections.replaceAll('**Section 1:**', '');
+                sections = sections.replaceAll('**', '');
+
+                sections = sections.replaceAll('{', '');
+                sections = sections.replaceAll('}', '');
+
+                let lines = sections.split('\\n');
+                lines.splice(0, 1);
+
+                let textLines = lines.join('<br>')
+                textLines = textLines.replaceAll(/\\/g, '');
+
+                textLines = textLines.replaceAll('mischievous', 'naughty')
+                /* ^^ Idk why, but llama likes mischievous but the translator doesn't */
+
+                if (textLines.endsWith('"')) {
+                    textLines = textLines.slice(0, -1);
+                }
+
+                return { text: textLines };
+            }
+            async function generateImage(prompt, idx) {
+                console.log('Generating...');
+                const story = await request(encodeURI('/image?prompt=' + prompt));
+
+                console.log(story);
+
+                const blob = await story.blob();
+                const url = URL.createObjectURL(blob);
+
+                const img = document.createElement('img');
+                img.src = url;
+                imagesComplete[idx] = img;
+
+                imgsDone++;
+                if (imgsDone === 2) {
+                    setStatus('✅ Comlete!', 0);
+                    setTimeout(() => {
+                        hide(document.querySelector('.onProccess'));
+                        renderStory();
+                    }, 1000);
+                }
+            }
+            async function generatePrompts(story) {
+                setStatus('Generating image prompts', 15, 'gemma-7b-it', 'google');
+                console.log('Generating...');
+                const response = await request(encodeURI('/prompts?story=' + story));
+
+                console.log(response);
+
+                const promptsRaw = await response.text();
+                console.log(promptsRaw);
+
+                const prompts = parsePrompts(promptsRaw);
+
+                document.getElementById('prompts').innerHTML = prompts[0] + '<br> - <br>' + prompts[1];
+
+                setStatus('Generating images', 30, 'dreamshaper-8-lcm', 'lykon');
+                setTimeout(() => {
+                    generateImage(prompts[0], 0);
+                }, 0);
+                setTimeout(() => {
+                    generateImage(prompts[1], 1);
+                }, 0);
+            }
+            async function generateStory(imgDesc) {
+                console.log('Generating...');
+                setStatus('Generating story', 20, 'llama-2-7b-chat-int8', 'meta');
+                const story = await request(encodeURI('/story?prompt=' + imgDesc));
+
+                console.log(story);
+
+                const text = await story.text();
+                console.log(text);
+                console.log(JSON.parse(text));
+
+                const storyData = parseStory(text);
+
+                const storyText = storyData.text;
+                const storyTextNoTitles = storyText.replace('Section 2', '<br><br>Section 2').split('<br>').filter((p) => !p.startsWith('Section')).join('<br>');
+
+                storyComplete = storyTextNoTitles.split('<br><br><br>');
+
+                console.log('Sections:');
+                console.log(storyComplete);
+
+                const storyPart1 = splitSection(storyComplete[0]);
+                const storyPart2 = splitSection(storyComplete[1]);
+
+                document.getElementById('story').innerHTML = storyComplete[0] + '<br> - <br>' + storyComplete[1];
+
+                setStatus('Translating', 10, 'm2m100-1.2b', 'meta');
+
+                function callTranslatorForEachString(strings) {
+                    return Promise.all(strings.map((string) => translate(string, toLang)));
+                }
+
+                let [storyPart1Translated, storyPart2Translated] = await Promise.all([callTranslatorForEachString(storyPart1), callTranslatorForEachString(storyPart2)]);
+
+                [storyPart1Translated, storyPart2Translated] = [storyPart1Translated.join('. '), storyPart2Translated.join('. ')];
+
+                storyComplete[0] = storyPart1Translated.replaceAll('. ', '.').replaceAll('.', '. ').replaceAll('..', '. ');
+                storyComplete[1] = storyPart2Translated.replaceAll('. ', '.').replaceAll('.', '. ').replaceAll('..', '. ');
+
+                document.getElementById('translation').innerHTML = storyComplete[0] + storyPart1 + '<br> - <br>' + storyComplete[1] + storyPart2;
+
+                generatePrompts(storyText);
+            }
+
+            function parsePrompts(prompt) {
+                prompt = JSON.parse(prompt);
+                prompt = prompt.response;
+
+                prompt = prompt.replaceAll('**Prompt 1:**\n\n', '');
+                prompt = prompt.replaceAll('**Prompt 2:**\n\n', '');
+
+                prompt = prompt.replaceAll('**Prompt 1:**\n', '');
+                prompt = prompt.replaceAll('**Prompt 2:**\n', '');
+
+                prompt = prompt.replaceAll('**Prompt 1:**', '');
+                prompt = prompt.replaceAll('**Prompt 2:**', '');
+
+                prompt = prompt.split('\n\n');
+                if (prompt.length < 2) {
+                    prompt = prompt.split('\n');
+                }
+
+                if (prompt.length > 2) {
+                    prompt.filter((p) => p.length > 0);
+                }
+
+                console.log(prompt);
+
+                return prompt;
+            }
+            async function recognize() {
+                setStatus('Recognizing image', 15, 'uform-gen2-qwen-500m', 'unum');
+                console.log('Recognizing...');
+                let response = await request('/recognize', 1, {
+                    'image': file
+                });
+
+                response = await response.json();
+
+                console.log(response);
+
+                document.getElementById('description').innerHTML = response.description;
+
+                setStatus('Checking for NSFE', 5, 'hermes-2-pro-mistral-7b', 'nousresearch');
+                const unsafeRaw = await request(encodeURI('/safe?prompt=' + response.description));
+                const unsafe = await unsafeRaw.text();
+                console.log('unsafe:', unsafe);
+
+                if (unsafe.includes("true")) {
+                    alert('Image contains sexual content or violent content.');
+                    return 'nsfe.'
+                }
+
+                document.getElementById('unsafe').innerHTML = 'Image is unsafe? ' + unsafe;
+
+                return response.description;
+            }
+
+
+            async function main() {
+                const imgDesc = await recognize();
+                console.log(imgDesc);
+
+                generateStory(imgDesc);
+            }
+        </script>
+        <script>
+
+            function uploadFile(fileD) {
+                if (!(fileD.name.endsWith('.png') || fileD.name.endsWith('.jpg') || fileD.name.endsWith('.jpeg'))) {
+                    alert('Only png, jpg and jpeg files are allowed!');
+                    return;
+                }
+                if (fileD.size > 5 * 1024 * 1024) {
+                    alert('File too big!');
+                }
+                const name = fileD.name;
+                const element = document.getElementById('file').parentElement;
+                element.innerHTML = 'Uploading...';
+                element.classList.remove('dragover');
+                const fr = new FileReader();
+                fr.onload = () => {
+                    file = fr.result;
+                    element.innerHTML = '<img src="' + file + '">' + '<p>' + name + '</p>';
+                    document.getElementById('generate').removeAttribute('disabled');
+                    document.getElementById('generate').addEventListener('click', execMain);
+                }
+                fr.readAsDataURL(fileD);
+            }
+            function execMain() {
+                document.querySelectorAll('.leave').forEach((element) => {
+                    hide(element);
+                });
+                document.querySelectorAll('.second').forEach((element) => {
+                    show(element);
+                });
+
+                document.getElementById('start').addEventListener('click', () => {
+                    toLang = document.getElementById('language').value;
+
+                    document.querySelectorAll('.second').forEach((element) => {
+                        hide(element);
+                    });
+
+                    document.querySelectorAll('.onProccess').forEach((element) => {
+                        show(element);
+                    });
+
+                    main();
+                });
+            }
+
+            document.getElementById('file').addEventListener('change', (event) => {
+                const fileRaw = event.target.files[0];
+                uploadFile(fileRaw);
+            });
+            document.getElementById('file').parentElement.addEventListener('click', (event) => {
+                document.getElementById('file').click();
+            });
+            document.getElementById('file').parentElement.addEventListener('dragover', (event) => {
+                event.preventDefault();
+            });
+            document.getElementById('file').parentElement.addEventListener('dragenter', (event) => {
+                event.preventDefault();
+                document.getElementById('file').parentElement.classList.add('dragover');
+                document.getElementById('file').parentElement.querySelector('p').innerHTML = 'Drop it like it\'s hot!';
+            });
+            document.getElementById('file').parentElement.addEventListener('dragleave', (event) => {
+                event.preventDefault();
+                document.getElementById('file').parentElement.classList.remove('dragover');
+                document.getElementById('file').parentElement.querySelector('p').innerHTML = 'Click or drag and drop an image';
+            })
+            document.getElementById('file').parentElement.addEventListener('drop', (event) => {
+                event.preventDefault();
+                const fileRaw = event.dataTransfer.files[0];
+                uploadFile(fileRaw);
+            });
+        </script>
+
+        <script>
+            let popupOpen = false;
+            const popup = document.getElementById('popup');
+
+            function openPopup() {
+                if (popupOpen) {
+                    return;
+                }
+
+                popupOpen = true;
+                popup.classList.remove('displayNone');
+                popup.classList.remove('byePopup');
+            }
+
+            popup.addEventListener('click', (event) => {
+                if (event.target === popup || event.target === popup.querySelector('.closeButton')) {
+                    popupOpen = false;
+                    popup.classList.add('byePopup');
+                }
+            });
+
+            document.getElementById('info').addEventListener('click', () => {
+                openPopup();
+            })
+        </script>
+    </body>
+
+</html>
